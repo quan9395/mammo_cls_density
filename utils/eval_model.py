@@ -74,32 +74,32 @@ def eval(model, device, have_prj, loader, metric_loss, miner, criterion, split):
             else:
                 pred_birad = model(images)
                 # p_mloss = torch.tensor([0.0])
-                birads_loss = FocalLoss(gamma=4)(pred_birad, label_birads.long())
-                # density_loss = nn.CrossEntropyLoss()(pred_density, label_density.long())
-                ce_loss = birads_loss
-            birads_loss_sum += birads_loss.item()
-            # density_loss_sum += density_loss.item()
+                # birads_loss = FocalLoss(gamma=4)(pred_birad, label_birads.long())
+                density_loss = FocalLoss(gamma=4)(pred_density, label_density.long())
+                ce_loss = density_loss
+            # birads_loss_sum += birads_loss.item()
+            density_loss_sum += density_loss.item()
             ce_loss_sum += ce_loss.item()
             metric_loss_sum += 0
 
-            pred1 = pred_birad.max(1, keepdim=True)[1]
-            # pred2 = pred_density.max(1, keepdim=True)[1]
-            correct_birads += pred1.eq(label_birads.view_as(pred1)).sum().item()
-            # correct_density += pred2.eq(label_density.view_as(pred2)).sum().item()
-            b = [item.item() for item in pred1]
-            # c = [item.item() for item in pred2]
-            f1_pred_birads.extend(b)
-            # f1_pred_density.extend(c)
+            # pred1 = pred_birad.max(1, keepdim=True)[1]
+            pred2 = pred_density.max(1, keepdim=True)[1]
+            # correct_birads += pred1.eq(label_birads.view_as(pred1)).sum().item()
+            correct_density += pred2.eq(label_density.view_as(pred2)).sum().item()
+            # b = [item.item() for item in pred1]
+            c = [item.item() for item in pred2]
+            # f1_pred_birads.extend(b)
+            f1_pred_density.extend(c)
 
-    f1_birads = f1_score(f1_res_birads, f1_pred_birads, average='macro')
-    # f1_density = f1_score(f1_res_density, f1_pred_density, average='macro')
+    # f1_birads = f1_score(f1_res_birads, f1_pred_birads, average='macro')
+    f1_density = f1_score(f1_res_density, f1_pred_density, average='macro')
     loss_avg = ce_loss_sum / (i+1)
-    birads_loss_avg = birads_loss_sum / (i+1)
-    # density_loss_avg = density_loss_sum / (i+1)
+    # birads_loss_avg = birads_loss_sum / (i+1)
+    density_loss_avg = density_loss_sum / (i+1)
 
     metric_loss_avg = metric_loss_sum / (i+1)
 
-    accuracy_birads = correct_birads / len(loader.dataset)
-    # accuracy_density = correct_density / len(loader.dataset)
+    # accuracy_birads = correct_birads / len(loader.dataset)
+    accuracy_density = correct_density / len(loader.dataset)
 
-    return loss_avg, birads_loss_avg, accuracy_birads, f1_birads
+    return loss_avg, density_loss_avg, accuracy_density, f1_density
