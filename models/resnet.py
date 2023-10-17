@@ -45,8 +45,8 @@ class ResNet(nn.Module):
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
         self.dropout = nn.Dropout(0.4, inplace=False)
         self.fc = nn.Linear(2048, 1024)
-        self.fc1 = nn.Linear(1024, 3)
-        # self.fc2 = nn.Linear(1024, 4)
+        # self.fc1 = nn.Linear(1024, 3)
+        self.fc2 = nn.Linear(1024, 4)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -104,10 +104,10 @@ class ResNet(nn.Module):
         x = torch.flatten(x, 1)
         embedding = self.dropout(x)
         embedding = self.fc(embedding)
-        birads = self.fc1(embedding)
+        # birads = self.fc1(embedding)
 
-        # density = self.fc2(embedding)
-        return birads
+        density = self.fc2(embedding)
+        return density
 
     def forward(self, x):
         return self._forward_impl(x)
