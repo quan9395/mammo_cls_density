@@ -72,17 +72,17 @@ def train(model,
         for _, data in enumerate(tqdm(trainloader)):
             images, labels = data
 
-            label_birads = labels[0]
-            # label_density = labels[1]
-            label_birads = label_birads - 1
-            # label_density = label_density - 1
+            # label_birads = labels[0]
+            label_density = labels[1]
+            # label_birads = label_birads - 1
+            label_density = label_density - 1
             # b = [item.item() for item in label_birads]
             # a.extend(b)
             # print(a)
             
             images= images.to(device)
-            label_birads = label_birads.to(device)
-            # label_density = label_density.to(device)
+            # label_birads = label_birads.to(device)
+            label_density = label_density.to(device)
             optimizer.zero_grad()
             if have_prj:  # not used
                 if turn:
@@ -99,16 +99,16 @@ def train(model,
                     total_loss = ce_loss
                 turn = not turn
             else:
-                pred_birad = model(images)
+                pred_density = model(images)
                 # print(pred_birad)
                 # print(pred_birad.shape)
                 # print(label_birads)
   
                 # print(pred_density.shape)
                 # print(label_density)
-                birads_loss = FocalLoss(gamma=4)(pred_birad, label_birads.long())
-                # density_loss = FocalLoss(gamma=4)(pred_density, label_density.long())
-                total_loss = birads_loss
+                # birads_loss = FocalLoss(gamma=4)(pred_birad, label_birads.long())
+                density_loss = FocalLoss(gamma=4)(pred_density, label_density.long())
+                total_loss = density_loss
 
             total_loss.backward()
             optimizer.step()
@@ -121,11 +121,11 @@ def train(model,
         # print('Validation set: Avg Val CE Loss: {:.4f}; Avg Val Metric Loss: {:.4f}; Val accuracy: {:.2f}%'.format(val_loss_avg, val_metric_loss_avg, 100. * val_accuracy))
         # f.write('Validation set: Avg Val CE Loss: {:.4f}; Avg Val Metric Loss: {:.4f}; Val accuracy: {:.2f}% \n'.format(val_loss_avg, val_metric_loss_avg, 100. * val_accuracy))
         # eval testset
-        test_loss_avg, birads_loss_avg, accuracy_birads, f1_birads = eval(model, device, have_prj, testloader, metric_loss, miner, criterion, split='test')
-        print('Test set: Avg Focal Loss: {:.4f};, Avg Birads Focal Loss: {:.4f}; Birads accuracy: {:.2f}%; f1_birads: {:.2f}% '.format(test_loss_avg,birads_loss_avg, 100. * accuracy_birads,100. * f1_birads))
-        f.write('Test set: Avg Focal Loss: {:.4f};, Avg Birads Focal Loss: {:.4f}; Birads accuracy: {:.2f}%; f1_birads: {:.2f}% '.format(test_loss_avg,birads_loss_avg, 100. * accuracy_birads,100. * f1_birads))
+        test_loss_avg, density_loss_avg, accuracy_density, f1_density = eval(model, device, have_prj, testloader, metric_loss, miner, criterion, split='test')
+        print('Test set: Avg Focal Loss: {:.4f};, Avg density Focal Loss: {:.4f}; density accuracy: {:.2f}%; f1_density: {:.2f}% '.format(test_loss_avg,density_loss_avg, 100. * accuracy_density,100. * f1_density))
+        f.write('Test set: Avg Focal Loss: {:.4f};, Avg density Focal Loss: {:.4f}; density accuracy: {:.2f}%; f1_density: {:.2f}% '.format(test_loss_avg,density_loss_avg, 100. * accuracy_density,100. * f1_density))
         
-        test_accuracy = accuracy_birads
+        test_accuracy = accuracy_density
         # save checkpoint
         print('Saving checkpoint')
         torch.save({
