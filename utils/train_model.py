@@ -135,7 +135,7 @@ def train(model,
             'scheduler_state_dict': scheduler.state_dict(),
             'learning_rate': lr,
             # 'val_acc': val_accuracy,
-            'test_acc_birads': accuracy_birads
+            'test_acc_density': accuracy_density
         }, os.path.join(save_path, 'current_model' + '.pth'))
 
         if test_accuracy > best_acc:
