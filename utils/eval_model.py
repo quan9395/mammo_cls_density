@@ -64,8 +64,8 @@ def eval(model, device, have_prj, loader, metric_loss, miner, criterion, split):
             # f1_res_density.extend(c)
             # print(a)
             images = images.to(device)
-            label_birads = label_birads.to(device)
-            # label_density = label_density.to(device)
+            # label_birads = label_birads.to(device)
+            label_density = label_density.to(device)
             if have_prj:  #not used
                 p, logits = model(images)
                 pminer = miner(p, labels)
