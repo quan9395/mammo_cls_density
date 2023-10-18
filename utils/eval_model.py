@@ -55,13 +55,13 @@ def eval(model, device, have_prj, loader, metric_loss, miner, criterion, split):
         for i, data in enumerate(tqdm(loader)):
             images, labels = data
             label_birads = labels[0]
-            # label_density = labels[1]
+            label_density = labels[1]
             label_birads = label_birads - 1
-            # label_density = label_density - 1
+            label_density = label_density - 1
             b = [item.item() for item in label_birads]
-            # c = [item.item() for item in label_density]
+            c = [item.item() for item in label_density]
             f1_res_birads.extend(b)
-            # f1_res_density.extend(c)
+            f1_res_density.extend(c)
             # print(a)
             images = images.to(device)
             # label_birads = label_birads.to(device)
