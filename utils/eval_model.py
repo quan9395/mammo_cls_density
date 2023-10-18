@@ -72,7 +72,7 @@ def eval(model, device, have_prj, loader, metric_loss, miner, criterion, split):
                 p_mloss = metric_loss(p, labels, pminer)
                 ce_loss = criterion(logits, labels)
             else:
-                pred_birad = model(images)
+                pred_density = model(images)
                 # p_mloss = torch.tensor([0.0])
                 # birads_loss = FocalLoss(gamma=4)(pred_birad, label_birads.long())
                 density_loss = FocalLoss(gamma=4)(pred_density, label_density.long())
