@@ -22,7 +22,7 @@ else:
 
 # change
 # pth_path = "/media/Z/toannt28/checkpoint/mt_prj_resnet152_bsz8.pth"
-pth_path = r"./models/resnet50/best_model.pth"
+pth_path = r"./best_model.pth"
 trainloader, testloader = read_dataset(input_size, batch_size, root, dataset_path)
 
 # change
