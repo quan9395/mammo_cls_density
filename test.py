@@ -27,14 +27,16 @@ trainloader, testloader = read_dataset(input_size, batch_size, root, dataset_pat
 
 # change
 model = resnet50(pth_url=pth_path, pretrained=False)
-summary(model, (3, 512, 512))
-
 checkpoint = torch.load(pth_path, map_location='cpu')
-new_state_dict = OrderedDict()
-for k, v in checkpoint['model_state_dict'].items():
-    name = k[7:]
-    new_state_dict[name] = v
-model.load_state_dict(checkpoint['model_state_dict'])
+# new_state_dict = OrderedDict()
+# for k, v in checkpoint['model_state_dict'].items():
+#     name = k[7:]
+#     new_state_dict[name] = v
+new_state_dict = {}
+for key, value in checkpoint['model_state_dict'].items():
+    new_key = key.replace("module.", "")
+    new_state_dict[new_key] = value
+model.load_state_dict(new_state_dict)
 if __name__ == '__main__':
     print("Model loaded!")
     model = model.to(device)
