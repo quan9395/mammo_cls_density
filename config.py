@@ -1,6 +1,6 @@
 seed = 42
 batch_size = 32
-end_epoch = 20
+end_epoch = 100
 init_lr = 0.01
 lr_milestones = [15, 30, 45, 60]
 lr_decay_rate = 0.1
